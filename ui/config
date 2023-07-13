@@ -1,0 +1,14 @@
+{
+    ".url": {
+        "SYNO.SDS.stars.synology": {
+            "allUsers": true,
+            "desc": "stars.synology Package",
+            "icon": "images/{0}.png",
+            "port": "8081",
+            "protocol": "https",
+            "title": "Example Package",
+            "type": "url",
+            "url": "/"
+        }
+    }
+}

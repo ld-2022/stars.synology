@@ -5,7 +5,7 @@ source /pkgscripts/include/pkg_util.sh
 
 package="stars.synology"
 version="1.0.0-0001"
-displayname="Example Package"
+displayname="stars.synology"
 os_min_ver="7.0-40000"
 maintainer="Synology Inc."
 arch="$(pkg_get_platform)"
