@@ -3,7 +3,7 @@
 
 source /pkgscripts/include/pkg_util.sh
 
-package="ExamplePackage"
+package="stars.synology"
 version="1.0.0-0001"
 displayname="Example Package"
 os_min_ver="7.0-40000"
