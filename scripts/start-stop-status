@@ -3,9 +3,9 @@
 # Synology package variables
 PACKAGE_NAME="examplePkg"
 INSTALL_DIR="/var/packages/${PACKAGE_NAME}/target"
-PID_FILE="${INSTALL_DIR}/examplePkg.pid"
+PID_FILE="${INSTALL_DIR}/stars.synology.pid"
 
-DAEMON="${INSTALL_DIR}/src/examplePkg"
+DAEMON="${INSTALL_DIR}/src/stars.synology"
 
 # Load common env vars (USER、SYNOPKG_PKGDEST etc.)
 source /etc/profile
