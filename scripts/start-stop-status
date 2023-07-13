@@ -1,31 +1,42 @@
 #!/bin/sh
-# Copyright (C) 2000-2020 Synology Inc. All rights reserved.
 
-case $1 in
+# Synology package variables
+PACKAGE_NAME="examplePkg"
+INSTALL_DIR="/var/packages/${PACKAGE_NAME}/target"
+PID_FILE="${INSTALL_DIR}/examplePkg.pid"
+
+DAEMON="${INSTALL_DIR}/src/examplePkg"
+
+# Load common env vars (USER、SYNOPKG_PKGDEST etc.)
+source /etc/profile
+
+start_daemon()
+{
+	# Start your daemon with the desired parameters
+	start-stop-daemon -b -o -u "${USER}" -S -p "${PID_FILE}" -x "${DAEMON}"
+}
+
+stop_daemon()
+{
+	# Stop your daemon
+	start-stop-daemon -o -u "${USER}" -K -q -p "${PID_FILE}"
+}
+
+case "$1" in
 	start)
-		### Start this package.
-		examplePkg "Start"
-		echo "the package has been started" > $SYNOPKG_TEMP_LOGFILE
+		start_daemon
 		exit 0
 	;;
-	stop)
-		### Stop this package.
-		examplePkg "Stop"
-		echo "the package has been stopped" > $SYNOPKG_TEMP_LOGFILE
-		exit 0
-	;;
-	status)
-		### Check package alive.
-		if [ -h "/usr/local/bin/examplePkg" ]; then
-			exit 0
-		else
-			exit 1
-		fi
-	;;
-	killall)
-        ;;
-	log)
-		exit 0
-	;;
-esac
 
+	stop)
+		stop_daemon
+		exit 0
+	;;
+
+	status)
+		if [ -e "${PID_FILE}" ] && [ -n "$(cat ${PID_FILE})" ]; then
+			echo "status: run"
+		else
+			echo "status: stop"
+		fi
+		exit 0

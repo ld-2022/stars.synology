@@ -5,7 +5,7 @@
             "desc": "stars.synology Package",
             "icon": "images/{0}.png",
             "port": "8081",
-            "protocol": "https",
+            "protocol": "http",
             "title": "Example Package",
             "type": "url",
             "url": "/"
