@@ -3,14 +3,13 @@
 
 source /pkgscripts/include/pkg_util.sh
 
-package="stars.synology"
+package="ExamplePackage"
 version="1.0.0-0001"
-displayname="stars.synology"
+displayname="Example Package"
 os_min_ver="7.0-40000"
 maintainer="Synology Inc."
 arch="$(pkg_get_platform)"
 description="this is an example package"
 dsmuidir="ui"
-dsmapp="stars.synology"  # 添加这一行
 [ "$(caller)" != "0 NULL" ] && return 0
 pkg_dump_info
