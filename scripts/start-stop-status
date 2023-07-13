@@ -40,3 +40,10 @@ case "$1" in
 			echo "status: stop"
 		fi
 		exit 0
+		;;
+    	killall)
+            ;;
+    	log)
+    		exit 0
+    	;;
+    esac
