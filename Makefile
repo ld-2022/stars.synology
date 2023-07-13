@@ -12,8 +12,8 @@ $(EXEC): $(SRC)
 	go build -o $@ $(SRC)
 
 install: $(EXEC)
-	mkdir -p $(DESTDIR)/usr/local/bin/
-	install $< $(DESTDIR)/usr/local/bin/
+	mkdir -p $(DESTDIR)/bin
+	install $< $(DESTDIR)/bin
 
 clean:
-	rm -rf *.o $(EXEC)
+	rm -rf $(EXEC)

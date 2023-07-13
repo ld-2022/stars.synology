@@ -1,11 +1,11 @@
 #!/bin/sh
 
 # Synology package variables
-PACKAGE_NAME="examplePkg"
+PACKAGE_NAME="stars.synology"
 INSTALL_DIR="/var/packages/${PACKAGE_NAME}/target"
 PID_FILE="${INSTALL_DIR}/stars.synology.pid"
 
-DAEMON="${INSTALL_DIR}/src/stars.synology"
+DAEMON="${INSTALL_DIR}/bin/examplePkg"
 
 # Load common env vars (USER、SYNOPKG_PKGDEST etc.)
 source /etc/profile
@@ -13,13 +13,15 @@ source /etc/profile
 start_daemon()
 {
 	# Start your daemon with the desired parameters
-	start-stop-daemon -b -o -u "${USER}" -S -p "${PID_FILE}" -x "${DAEMON}"
+		nohup "${DAEMON}" > /dev/null 2>&1 &
+    echo $! > "${PID_FILE}"
 }
 
 stop_daemon()
 {
 	# Stop your daemon
-	start-stop-daemon -o -u "${USER}" -K -q -p "${PID_FILE}"
+  kill "$(cat "${PID_FILE}")"
+  rm -f "${PID_FILE}"
 }
 
 case "$1" in
