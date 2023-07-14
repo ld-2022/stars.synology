@@ -4,12 +4,12 @@
 include /env.mak
 
 EXEC= examplePkg
-SRC= src/main.go
+SRC= src
 
 all: $(EXEC)
 
 $(EXEC): $(SRC)
-	go build -o $@ $(SRC)
+	cd $(SRC) && go build -o $@ . && cd -
 
 install: $(EXEC)
 	mkdir -p $(DESTDIR)/bin
