@@ -14,6 +14,7 @@ $(EXEC): $(SRC)
 install: $(EXEC)
 	mkdir -p $(DESTDIR)/bin
 	install $< $(DESTDIR)/bin
+	cp -r src/resources $(DESTDIR)/bin
 
 clean:
 	rm -rf $(EXEC)
