@@ -2,7 +2,7 @@ package action
 
 import (
 	"gitee.com/Myzhang/stars.synology/src/command"
-	"github.com/labstack/echo/v4"
+	"github.com/labstack/echo"
 )
 
 func Status(c echo.Context) error {

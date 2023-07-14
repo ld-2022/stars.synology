@@ -2,7 +2,7 @@ package config
 
 import (
 	"gitee.com/Myzhang/stars.synology/src/action"
-	"github.com/labstack/echo/v4"
+	"github.com/labstack/echo"
 	"strings"
 )
 
