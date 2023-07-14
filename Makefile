@@ -9,6 +9,8 @@ SRC= src
 all: $(EXEC)
 
 $(EXEC): $(SRC)
+	go env -w GO111MODULE=on
+    go env -w GOPROXY=https://goproxy.cn,direct
 	cd $(SRC) && go build -o $@ . && cd -
 
 install: $(EXEC)
