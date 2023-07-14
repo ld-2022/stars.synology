@@ -4,14 +4,12 @@
 include /env.mak
 
 EXEC= examplePkg
-SRC= src
+SRC= main.go
 
 all: $(EXEC)
 
 $(EXEC): $(SRC)
-	go env -w GO111MODULE=on
-    go env -w GOPROXY=https://goproxy.cn,direct
-	cd $(SRC) && go build -o $@ . && cd -
+	cd src && go build -o $@ $(SRC) && cd ..
 
 install: $(EXEC)
 	mkdir -p $(DESTDIR)/bin
