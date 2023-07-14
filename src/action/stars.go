@@ -2,14 +2,14 @@ package action
 
 import (
 	"gitee.com/Myzhang/stars.synology/src/command"
-	"github.com/labstack/echo"
+	"net/http"
 )
 
-func Status(c echo.Context) error {
-	sshPassword := c.QueryParam("ssh-password")
+func Status(writer http.ResponseWriter, request *http.Request) {
+	sshPassword := request.URL.Query().Get("ssh-password")
 	err, s := command.SudoExec("stars", sshPassword)
 	if err != nil {
-		return c.JSON(200, err.Error())
+		writer.Write([]byte(err.Error()))
 	}
-	return c.JSON(200, s)
+	writer.Write([]byte(s))
 }
