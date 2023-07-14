@@ -2,6 +2,7 @@ package config
 
 import (
 	"embed"
+	"gitee.com/Myzhang/stars.synology/action"
 	"github.com/labstack/echo/v4"
 	"github.com/labstack/gommon/log"
 	"io/fs"
@@ -15,6 +16,7 @@ var res embed.FS
 func Bind(host, port string) {
 	e := echo.New()
 	static(e)
+	e.GET("/open/v1/status", action.Status)
 	err := e.Start(strings.Join([]string{host, port}, ":"))
 	if err != nil {
 		e.Logger.Fatal(err)

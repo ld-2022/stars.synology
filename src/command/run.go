@@ -2,14 +2,17 @@ package command
 
 import (
 	"bufio"
-	"context"
+	"fmt"
 	"io"
 	"log"
+	"os"
 	"os/exec"
-	"syscall"
+	"strings"
 )
 
-func readLine(reader *bufio.Reader, call CmdCall) {
+type ReadCall func(string, error)
+
+func readLine(reader *bufio.Reader, call ReadCall) {
 	for {
 		line, _, err := reader.ReadLine()
 		if err == io.EOF {
@@ -24,20 +27,26 @@ func readLine(reader *bufio.Reader, call CmdCall) {
 		}
 	}
 }
-func Command(name string, arg ...string) *exec.Cmd {
-	cmd := exec.Command(name, arg...)
-	cmd.SysProcAttr = &syscall.SysProcAttr{
-		Foreground: false,
-		Setsid:     true,
-	}
-	return cmd
-}
 
-func CommandCtx(ctx context.Context, name string, arg ...string) *exec.Cmd {
-	cmd := exec.CommandContext(ctx, name, arg...)
-	cmd.SysProcAttr = &syscall.SysProcAttr{
-		Foreground: false,
-		Setsid:     true,
+// sudoExec is a function that executes a command as a super user using sudo.
+func SudoExec(cmdStr string, sudoPassword string) (error, string) {
+	cmd := exec.Command("sudo", "-S", "bash", "-c", cmdStr)
+	cmd.Stdin = strings.NewReader(sudoPassword)
+	cmd.Stderr = os.Stderr
+	stdoutPipe, err := cmd.StdoutPipe()
+	if err != nil {
+		return err, ""
 	}
-	return cmd
+
+	stdoutRead := bufio.NewReader(stdoutPipe)
+	message := make([]string, 0)
+	go readLine(stdoutRead, func(line string, err error) {
+		message = append(message, line)
+	})
+
+	err = cmd.Run()
+	if err != nil {
+		return fmt.Errorf("cmd.Run() failed with %s\n", err), ""
+	}
+	return nil, strings.Join(message, "\n")
 }

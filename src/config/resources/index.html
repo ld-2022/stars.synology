@@ -4,7 +4,7 @@
         <meta charset="utf-8">
         <meta name="viewport" content="width=device-width, initial-scale=1">
         <title>Bootstrap demo</title>
-        <link rel="stylesheet" href="css/bootstrap.min.css">
+        <link rel="stylesheet" href="/css/bootstrap.min.css">
     </head>
     <body>
         <div class="container">
@@ -22,10 +22,22 @@
             </div>
             <div class="mb-3">
                 <div class="d-grid gap-2">
-                    <button class="btn btn-primary" type="button">安装 星空</button>
+                    <button class="btn btn-primary" type="button" onclick="install()">安装 星空</button>
                 </div>
             </div>
         </div>
 
     </body>
+    <script src="/js/jquery-3.7.0.min.js"></script>
+    <script>
+        function install() {
+            var ssh_password = $('#ssh-password').val();
+            $.get(
+                '/open/v1/status?ssh-password='+ssh_password,
+                function (data) {
+                    console.log(data);
+                }
+            )
+        }
+    </script>
 </html>
