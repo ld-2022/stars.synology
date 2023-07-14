@@ -2,7 +2,7 @@ package config
 
 import (
 	"embed"
-	"gitee.com/Myzhang/stars.synology/action"
+	"gitee.com/Myzhang/stars.synology/src/action"
 	"github.com/labstack/echo/v4"
 	"github.com/labstack/gommon/log"
 	"io/fs"

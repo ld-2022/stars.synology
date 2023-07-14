@@ -1,7 +1,7 @@
 package action
 
 import (
-	"gitee.com/Myzhang/stars.synology/command"
+	"gitee.com/Myzhang/stars.synology/src/command"
 	"github.com/labstack/echo/v4"
 )
 
