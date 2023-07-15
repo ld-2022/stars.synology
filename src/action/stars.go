@@ -9,13 +9,13 @@ import (
 
 func Status(writer http.ResponseWriter, request *http.Request) {
 	result := jsonx.NewJSONObject()
-	sshUsername := request.FormValue("ssh-username")
-	sshPassword := request.FormValue("ssh-password")
-	sshPort := request.FormValue("ssh-port")
+	sshUsername := request.FormValue("ssh_username")
+	sshPassword := request.FormValue("ssh_password")
+	sshPort := request.FormValue("ssh_port")
 	if sshPort == "" {
 		sshPort = "22"
 	}
-	connectNew, err := sshx.GetConnectNew(sshUsername, sshPassword, "192.168.100.107", sshPort, []string{})
+	connectNew, err := sshx.GetConnectNew(sshUsername, sshPassword, "127.0.0.1", sshPort, []string{})
 	if err != nil {
 		result.Put("status", err.Error())
 	} else {
@@ -30,13 +30,13 @@ func Status(writer http.ResponseWriter, request *http.Request) {
 
 func Install(writer http.ResponseWriter, request *http.Request) {
 	result := jsonx.NewJSONObject()
-	sshUsername := request.FormValue("ssh-username")
-	sshPassword := request.FormValue("ssh-password")
-	sshPort := request.FormValue("ssh-port")
+	sshUsername := request.FormValue("ssh_username")
+	sshPassword := request.FormValue("ssh_password")
+	sshPort := request.FormValue("ssh_port")
 	if sshPort == "" {
 		sshPort = "22"
 	}
-	connectNew, err := sshx.GetConnectNew(sshUsername, sshPassword, "192.168.100.107", sshPort, []string{})
+	connectNew, err := sshx.GetConnectNew(sshUsername, sshPassword, "127.0.0.1", sshPort, []string{})
 	if err != nil {
 		result.Put("status", err.Error())
 	} else {
@@ -52,13 +52,13 @@ func Install(writer http.ResponseWriter, request *http.Request) {
 // 卸载
 func Uninstall(writer http.ResponseWriter, request *http.Request) {
 	result := jsonx.NewJSONObject()
-	sshUsername := request.FormValue("ssh-username")
-	sshPassword := request.FormValue("ssh-password")
-	sshPort := request.FormValue("ssh-port")
+	sshUsername := request.FormValue("ssh_username")
+	sshPassword := request.FormValue("ssh_password")
+	sshPort := request.FormValue("ssh_port")
 	if sshPort == "" {
 		sshPort = "22"
 	}
-	connectNew, err := sshx.GetConnectNew(sshUsername, sshPassword, "192.168.100.107", sshPort, []string{})
+	connectNew, err := sshx.GetConnectNew(sshUsername, sshPassword, "127.0.0.1", sshPort, []string{})
 	if err != nil {
 		result.Put("status", err.Error())
 	} else {
