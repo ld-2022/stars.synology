@@ -5,7 +5,6 @@ import (
 	"fmt"
 	"io"
 	"log"
-	"os"
 	"os/exec"
 	"strings"
 )
@@ -32,21 +31,26 @@ func readLine(reader *bufio.Reader, call ReadCall) {
 func SudoExec(cmdStr string, sudoPassword string) (error, string) {
 	cmd := exec.Command("sudo", "-S", "bash", "-c", cmdStr)
 	cmd.Stdin = strings.NewReader(sudoPassword)
-	cmd.Stderr = os.Stderr
 	stdoutPipe, err := cmd.StdoutPipe()
 	if err != nil {
-		return err, ""
+		return err, "获取输出管道失败"
+	}
+	stderrPipe, err := cmd.StderrPipe()
+	if err != nil {
+		return err, "获取错误管道失败"
 	}
 
-	stdoutRead := bufio.NewReader(stdoutPipe)
 	message := make([]string, 0)
-	go readLine(stdoutRead, func(line string, err error) {
+	go readLine(bufio.NewReader(stdoutPipe), func(line string, err error) {
+		message = append(message, line)
+	})
+	go readLine(bufio.NewReader(stderrPipe), func(line string, err error) {
 		message = append(message, line)
 	})
 
 	err = cmd.Run()
 	if err != nil {
-		return fmt.Errorf("cmd.Run() failed with %s\n", err), strings.Join(message, "\n")
+		return fmt.Errorf("cmd.Run() failed with %s\n", err), strings.Join(message, "\n") + "->错误消息"
 	}
-	return nil, strings.Join(message, "\n")
+	return nil, strings.Join(message, "\n") + "->正常消息"
 }

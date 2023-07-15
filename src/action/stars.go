@@ -26,23 +26,29 @@ func Status(writer http.ResponseWriter, request *http.Request) {
 
 func Install(writer http.ResponseWriter, request *http.Request) {
 	sshPassword := request.FormValue("ssh-password")
-	err, s := command.SudoExec("curl -O https://download.tbytm.com/stars/releases/shell/linux-install.sh && sudo sh linux-install.sh", sshPassword)
+	err, message := command.SudoExec("curl -O https://download.tbytm.com/stars/releases/shell/linux-install.sh && sudo sh linux-install.sh", sshPassword)
 	if err != nil {
-		writeJSON(writer, jsonx.NewJSONObject().FluentPut("status", "安装失败").FluentPut("msg", err.Error()))
+		writeJSON(writer, jsonx.NewJSONObject().
+			FluentPut("status", "安装失败").
+			FluentPut("msg", message).
+			FluentPut("err", err.Error()))
 		return // TODO
 	}
-	writeJSON(writer, jsonx.NewJSONObject().FluentPut("status", "安装成功").FluentPut("msg", s))
+	writeJSON(writer, jsonx.NewJSONObject().FluentPut("status", "安装成功").FluentPut("msg", message))
 }
 
 // 卸载
 func Uninstall(writer http.ResponseWriter, request *http.Request) {
 	sshPassword := request.FormValue("ssh-password")
-	err, s := command.SudoExec("curl -O https://download.tbytm.com/stars/releases/shell/shell-uninstall.sh && sudo sh shell-uninstall.sh", sshPassword)
+	err, message := command.SudoExec("curl -O https://download.tbytm.com/stars/releases/shell/shell-uninstall.sh && sudo sh shell-uninstall.sh", sshPassword)
 	if err != nil {
-		writeJSON(writer, jsonx.NewJSONObject().FluentPut("status", "安装失败").FluentPut("msg", err.Error()))
+		writeJSON(writer, jsonx.NewJSONObject().
+			FluentPut("status", "安装失败").
+			FluentPut("msg", message).
+			FluentPut("err", err.Error()))
 		return // TODO
 	}
-	writeJSON(writer, jsonx.NewJSONObject().FluentPut("status", "安装成功").FluentPut("msg", s))
+	writeJSON(writer, jsonx.NewJSONObject().FluentPut("status", "安装成功").FluentPut("msg", message))
 }
 
 // 判断指定进程是否存在
