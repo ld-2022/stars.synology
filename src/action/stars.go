@@ -15,7 +15,7 @@ func Status(writer http.ResponseWriter, request *http.Request) {
 	if sshPort == "" {
 		sshPort = "22"
 	}
-	connectNew, err := sshx.GetConnectNew(sshUsername, sshPassword, "127.0.0.1", sshPort, []string{})
+	connectNew, err := sshx.GetConnectNew(sshUsername, sshPassword, "192.168.100.107", sshPort, []string{})
 	if err != nil {
 		result.Put("status", err.Error())
 	} else {
@@ -36,7 +36,7 @@ func Install(writer http.ResponseWriter, request *http.Request) {
 	if sshPort == "" {
 		sshPort = "22"
 	}
-	connectNew, err := sshx.GetConnectNew(sshUsername, sshPassword, "127.0.0.1", sshPort, []string{})
+	connectNew, err := sshx.GetConnectNew(sshUsername, sshPassword, "192.168.100.107", sshPort, []string{})
 	if err != nil {
 		result.Put("status", err.Error())
 	} else {
@@ -58,7 +58,7 @@ func Uninstall(writer http.ResponseWriter, request *http.Request) {
 	if sshPort == "" {
 		sshPort = "22"
 	}
-	connectNew, err := sshx.GetConnectNew(sshUsername, sshPassword, "127.0.0.1", sshPort, []string{})
+	connectNew, err := sshx.GetConnectNew(sshUsername, sshPassword, "192.168.100.107", sshPort, []string{})
 	if err != nil {
 		result.Put("status", err.Error())
 	} else {
