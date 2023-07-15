@@ -23,6 +23,8 @@
             <div class="mb-3">
                 <div class="d-grid gap-2">
                     <button class="btn btn-primary" type="button" onclick="install()">安装 星空</button>
+                    <button class="btn btn-primary" type="button" onclick="unInstall()">卸载 星空</button>
+                    <button class="btn btn-primary" type="button" onclick="checkStatus()">查看状态 星空</button>
                 </div>
             </div>
         </div>
@@ -30,10 +32,49 @@
     </body>
     <script src="/js/jquery-3.7.0.min.js"></script>
     <script>
+        function checkStatus() {
+            var sshUsername = $('#ssh-username').val();
+            var sshPassword = $('#ssh-password').val();
+            var sshPort = $('#ssh-port').val();
+            $.post(
+                "/open/v1/status",
+                {
+                    ssh_username: sshUsername,
+                    ssh_password: sshPassword,
+                    ssh_port: sshPort,
+                },
+                function (data) {
+                    console.log(data);
+                }
+            )
+        }
         function install() {
-            var ssh_password = $('#ssh-password').val();
-            $.get(
-                '/open/v1/status?ssh-password='+ssh_password,
+            var sshUsername = $('#ssh-username').val();
+            var sshPassword = $('#ssh-password').val();
+            var sshPort = $('#ssh-port').val();
+            $.post(
+                "/open/v1/install",
+                {
+                    ssh_username: sshUsername,
+                    ssh_password: sshPassword,
+                    ssh_port: sshPort,
+                },
+                function (data) {
+                    console.log(data);
+                }
+            )
+        }
+        function unInstall() {
+            var sshUsername = $('#ssh-username').val();
+            var sshPassword = $('#ssh-password').val();
+            var sshPort = $('#ssh-port').val();
+            $.post(
+                "/open/v1/uninstall",
+                {
+                    ssh_username: sshUsername,
+                    ssh_password: sshPassword,
+                    ssh_port: sshPort,
+                },
                 function (data) {
                     console.log(data);
                 }

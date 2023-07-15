@@ -15,6 +15,45 @@ type Connection struct {
 	password string
 }
 
+func GetConnectNew(user, password, host string, port string, cipherList []string) (conn *Connection, err error) {
+	var (
+		auth         []ssh.AuthMethod
+		addr         string
+		clientConfig *ssh.ClientConfig
+		client       *ssh.Client
+		config       ssh.Config
+	)
+	// get auth method
+	auth = make([]ssh.AuthMethod, 0)
+	auth = append(auth, ssh.Password(password))
+	if len(cipherList) == 0 {
+		config = ssh.Config{
+			Ciphers: []string{"aes128-ctr", "aes192-ctr", "aes256-ctr", "aes128-gcm@openssh.com", "arcfour256", "arcfour128", "aes128-cbc", "3des-cbc", "aes192-cbc", "aes256-cbc"},
+		}
+	} else {
+		config = ssh.Config{
+			Ciphers: cipherList,
+		}
+	}
+
+	clientConfig = &ssh.ClientConfig{
+		User:    user,
+		Auth:    auth,
+		Timeout: 30 * time.Second,
+		Config:  config,
+		HostKeyCallback: func(hostname string, remote net.Addr, key ssh.PublicKey) error {
+			return nil
+		},
+	}
+
+	// connet to ssh
+	addr = fmt.Sprintf("%s:%s", host, port)
+
+	client, err = ssh.Dial("tcp", addr, clientConfig)
+	conn = &Connection{Client: client, password: password}
+	return
+}
+
 func GetConnect(user, password, host string, port int, cipherList []string) (conn *Connection, err error) {
 	var (
 		auth         []ssh.AuthMethod
@@ -137,11 +176,11 @@ func (conn *Connection) SendCommands(cmdList ...string) ([]byte, error) {
 	}(in, out, &output)
 
 	cmd := strings.Join(cmds, "&& ")
-	fmt.Printf("> %s\n", cmd)
+	//fmt.Printf("> %s\n", cmd)
 	_, err = session.CombinedOutput(cmd)
 	<-rChan
 	if err != nil {
-		fmt.Println(string(output))
+		//fmt.Println(string(output))
 		return output, err
 	}
 

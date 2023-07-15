@@ -2,80 +2,73 @@ package action
 
 import (
 	"encoding/json"
-	"gitee.com/Myzhang/stars.synology/src/command"
+	"gitee.com/Myzhang/stars.synology/src/sshx"
 	"github.com/ld-2022/jsonx"
 	"net/http"
-	"os"
-	"os/exec"
 )
 
 func Status(writer http.ResponseWriter, request *http.Request) {
 	result := jsonx.NewJSONObject()
-	if FileExists("/opt/stars/stars") {
-		if run, runErr := ProcessExists("stars"); runErr == nil && run {
-			result.Put("status", "正在运行")
-		} else {
-			result.Put("status", "已安装、未启动")
-
-		}
+	sshUsername := request.FormValue("ssh-username")
+	sshPassword := request.FormValue("ssh-password")
+	sshPort := request.FormValue("ssh-port")
+	if sshPort == "" {
+		sshPort = "22"
+	}
+	connectNew, err := sshx.GetConnectNew(sshUsername, sshPassword, "127.0.0.1", sshPort, []string{})
+	if err != nil {
+		result.Put("status", err.Error())
 	} else {
-		result.Put("status", "没有安装")
+		if connectNew.IsInstallStars() {
+			result.Put("status", "已安装")
+		} else {
+			result.Put("status", "没有安装")
+		}
 	}
 	writeJSON(writer, result)
 }
 
 func Install(writer http.ResponseWriter, request *http.Request) {
+	result := jsonx.NewJSONObject()
+	sshUsername := request.FormValue("ssh-username")
 	sshPassword := request.FormValue("ssh-password")
-	err, message := command.SudoExec("curl -O https://download.tbytm.com/stars/releases/shell/linux-install.sh && sudo sh linux-install.sh", sshPassword)
-	if err != nil {
-		writeJSON(writer, jsonx.NewJSONObject().
-			FluentPut("status", "安装失败").
-			FluentPut("msg", message).
-			FluentPut("err", err.Error()))
-		return // TODO
+	sshPort := request.FormValue("ssh-port")
+	if sshPort == "" {
+		sshPort = "22"
 	}
-	writeJSON(writer, jsonx.NewJSONObject().FluentPut("status", "安装成功").FluentPut("msg", message))
+	connectNew, err := sshx.GetConnectNew(sshUsername, sshPassword, "127.0.0.1", sshPort, []string{})
+	if err != nil {
+		result.Put("status", err.Error())
+	} else {
+		if connectNew.InstallStars() {
+			result.Put("status", "安装成功")
+		} else {
+			result.Put("status", "安装失败")
+		}
+	}
+	writeJSON(writer, result)
 }
 
 // 卸载
 func Uninstall(writer http.ResponseWriter, request *http.Request) {
+	result := jsonx.NewJSONObject()
+	sshUsername := request.FormValue("ssh-username")
 	sshPassword := request.FormValue("ssh-password")
-	err, message := command.SudoExec("curl -O https://download.tbytm.com/stars/releases/shell/shell-uninstall.sh && sudo sh shell-uninstall.sh", sshPassword)
+	sshPort := request.FormValue("ssh-port")
+	if sshPort == "" {
+		sshPort = "22"
+	}
+	connectNew, err := sshx.GetConnectNew(sshUsername, sshPassword, "127.0.0.1", sshPort, []string{})
 	if err != nil {
-		writeJSON(writer, jsonx.NewJSONObject().
-			FluentPut("status", "安装失败").
-			FluentPut("msg", message).
-			FluentPut("err", err.Error()))
-		return // TODO
+		result.Put("status", err.Error())
+	} else {
+		if connectNew.UnInstallStars() {
+			result.Put("status", "卸载成功")
+		} else {
+			result.Put("status", "卸载失败")
+		}
 	}
-	writeJSON(writer, jsonx.NewJSONObject().FluentPut("status", "安装成功").FluentPut("msg", message))
-}
-
-// 判断指定进程是否存在
-func ProcessExists(processName string) (bool, error) {
-	cmd := exec.Command("pgrep", "-f", processName)
-
-	out, err := cmd.Output()
-
-	if err != nil {
-		return false, err
-	}
-
-	if len(out) > 0 {
-		return true, nil
-	}
-
-	return false, nil
-}
-
-// 判断文件是否存在
-func FileExists(filename string) bool {
-	if _, err := os.Stat(filename); os.IsNotExist(err) {
-		return false
-	} else if err != nil {
-		return false
-	}
-	return true
+	writeJSON(writer, result)
 }
 
 func writeJSON(w http.ResponseWriter, data interface{}) {
