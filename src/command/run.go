@@ -30,7 +30,7 @@ func readLine(reader *bufio.Reader, call ReadCall) {
 // sudoExec is a function that executes a command as a super user using sudo.
 func SudoExec(cmdStr string, sudoPassword string) (error, string) {
 	cmd := exec.Command("sudo", "-S", "bash", "-c", cmdStr)
-	cmd.Stdin = strings.NewReader(sudoPassword)
+	cmd.Stdin = strings.NewReader(sudoPassword + "\n")
 	stdoutPipe, err := cmd.StdoutPipe()
 	if err != nil {
 		return err, "获取输出管道失败"
