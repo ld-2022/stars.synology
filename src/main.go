@@ -14,6 +14,9 @@ func main() {
 func Bind(host, port string) {
 	http.Handle("/", http.FileServer(http.Dir("resources/")))
 	http.HandleFunc("/open/v1/status", action.Status)
+	http.HandleFunc("/open/v1/install", action.Install)
+	http.HandleFunc("/open/v1/uninstall", action.Uninstall)
+
 	fmt.Printf("Starting server at port 8081\n")
 	if err := http.ListenAndServe(strings.Join([]string{host, port}, ":"), nil); err != nil {
 		panic(err)
