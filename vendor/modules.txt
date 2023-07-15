@@ -1,7 +1,5 @@
 # github.com/imdario/mergo v0.3.15
 github.com/imdario/mergo
-# github.com/kr/pretty v0.1.0
-## explicit
 # github.com/ld-2022/jsonx v0.0.4-beta
 ## explicit
 github.com/ld-2022/jsonx
@@ -18,5 +16,3 @@ golang.org/x/crypto/ssh
 golang.org/x/crypto/ssh/internal/bcrypt_pbkdf
 # golang.org/x/sys v0.10.0
 golang.org/x/sys/cpu
-# gopkg.in/check.v1 v1.0.0-20180628173108-788fd7840127
-## explicit
