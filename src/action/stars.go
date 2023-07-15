@@ -4,16 +4,15 @@ import (
 	"encoding/json"
 	"gitee.com/Myzhang/stars.synology/src/command"
 	"github.com/ld-2022/jsonx"
-	"github.com/shirou/gopsutil/process"
 	"net/http"
 	"os"
-	"strings"
+	"os/exec"
 )
 
 func Status(writer http.ResponseWriter, request *http.Request) {
 	result := jsonx.NewJSONObject()
 	if FileExists("/opt/stars/stars") {
-		if ProcessExists("stars") {
+		if run, runErr := ProcessExists("stars"); runErr == nil && run {
 			result.Put("status", "正在运行")
 		} else {
 			result.Put("status", "已安装、未启动")
@@ -47,21 +46,20 @@ func Uninstall(writer http.ResponseWriter, request *http.Request) {
 }
 
 // 判断指定进程是否存在
-func ProcessExists(processName string) bool {
-	processes, err := process.Processes()
+func ProcessExists(processName string) (bool, error) {
+	cmd := exec.Command("pgrep", "-f", processName)
+
+	out, err := cmd.Output()
+
 	if err != nil {
-		return false
+		return false, err
 	}
-	for _, p := range processes {
-		name, nameErr := p.Name()
-		if nameErr != nil {
-			continue
-		}
-		if strings.Contains(name, processName) {
-			return true
-		}
+
+	if len(out) > 0 {
+		return true, nil
 	}
-	return false
+
+	return false, nil
 }
 
 // 判断文件是否存在
