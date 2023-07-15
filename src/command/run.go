@@ -46,7 +46,7 @@ func SudoExec(cmdStr string, sudoPassword string) (error, string) {
 
 	err = cmd.Run()
 	if err != nil {
-		return fmt.Errorf("cmd.Run() failed with %s\n", err), ""
+		return fmt.Errorf("cmd.Run() failed with %s\n", err), strings.Join(message, "\n")
 	}
 	return nil, strings.Join(message, "\n")
 }
