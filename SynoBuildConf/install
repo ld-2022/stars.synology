@@ -19,7 +19,7 @@ create_package_tgz() {
 
 	### install needed file into PKG_DIR
 	mkdir -p $binary_dir
-	cp -av examplePkg $binary_dir
+	cp -av starsInstall $binary_dir
 	cp -av ui $package_tgz_dir
 	make install DESTDIR="$package_tgz_dir"
 

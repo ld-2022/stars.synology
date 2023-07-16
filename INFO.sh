@@ -5,7 +5,7 @@ source /pkgscripts/include/pkg_util.sh
 
 package="starsInstall"
 version="1.0.0-0001"
-displayname="星空-安装器"
+displayname="星空云-安装器"
 os_min_ver="7.0-40000"
 maintainer="北京现伟科技有限公司"
 arch="$(pkg_get_platform)"

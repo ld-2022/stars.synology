@@ -1,18 +1,13 @@
-# Synology Example Package.
-
-This package is depend on Synology toolkit framework.
-This package is a template package, users can modify this package to generate their own packages.
-
-Please setup the toolkit by following [pkgscripts-ng](https://github.com/SynologyOpenSource/pkgscripts-ng)
-
-## Build package.
-After setup toolkit environment, you can create package by command:
-```bash
-pkgscripts-ng/PkgCreate.py [-p {platforms}] -c -v 7.0 ExamplePkg
+## 打包文档
+- build
+```azure
+/toolkit/pkgscripts-ng/PkgCreate.py --print-log -v 7.0 -p geminilake -c stars.synology
 ```
-```bash
-pkgscripts-ng/PkgCreate.py -p avoton -c -v 7.0 ExamplePkg
-pkgscripts-ng/PkgCreate.py -c -v 7.0 ExamplePkg # will generate package for all platforms in build_env
+- clone
+```azure
+/toolkit/source/stars.synologt.pull.sh
 ```
-
-You can find generated packages in result_spk directory.
+- release
+```azure
+/toolkit/result_spk
+```
