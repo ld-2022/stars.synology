@@ -1,11 +1,11 @@
 #!/bin/sh
 
 # Synology package variables
-PACKAGE_NAME="starsInstall"
+PACKAGE_NAME="xingxingInstall"
 INSTALL_DIR="/var/packages/${PACKAGE_NAME}/target"
-PID_FILE="${INSTALL_DIR}/starsInstall.pid"
+PID_FILE="${INSTALL_DIR}/xingxingInstall.pid"
 
-DAEMON="${INSTALL_DIR}/bin/starsInstall"
+DAEMON="${INSTALL_DIR}/bin/xingxingInstall"
 
 # Load common env vars (USER、SYNOPKG_PKGDEST etc.)
 source /etc/profile

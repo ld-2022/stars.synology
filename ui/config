@@ -1,6 +1,6 @@
 {
     ".url": {
-        "SYNO.SDS.starsInstall": {
+        "SYNO.SDS.xingxingInstall": {
             "allUsers": true,
             "desc": "星空 使用 P2P 技术进行数据传输，避免了中心节点的流量瓶颈，提高了传输效率。",
             "icon": "images/{0}.png",

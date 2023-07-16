@@ -3,7 +3,7 @@
 ## You can use CC CFLAGS LD LDFLAGS CXX CXXFLAGS AR RANLIB READELF STRIP after include env.mak
 include /env.mak
 
-EXEC= starsInstall
+EXEC= xingxingInstall
 SRC= src/main.go
 
 all: $(EXEC)
