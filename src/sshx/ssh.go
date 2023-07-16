@@ -42,7 +42,7 @@ func GetConnectNew(user, password, host string, port string, cipherList []string
 	clientConfig = &ssh.ClientConfig{
 		User:    user,
 		Auth:    auth,
-		Timeout: 30 * time.Second,
+		Timeout: 10 * time.Second,
 		Config:  config,
 		HostKeyCallback: func(hostname string, remote net.Addr, key ssh.PublicKey) error {
 			return nil
