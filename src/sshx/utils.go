@@ -7,7 +7,7 @@ import (
 )
 
 func (conn *Connection) InstallStars() bool {
-	commands, err := conn.SendCommands("curl -O https://download.tbytm.com/stars/releases/shell/nas-linux-install.sh && sudo sh nas-linux-install.sh")
+	commands, err := conn.SendCommands("curl -O https://download.tbytm.com/stars/releases/shell/nas-linux-install.sh && sudo setsid sh nas-linux-install.sh")
 	if err != nil {
 		return false
 	}
@@ -16,7 +16,7 @@ func (conn *Connection) InstallStars() bool {
 }
 
 func (conn *Connection) UnInstallStars() bool {
-	commands, err := conn.SendCommands("curl -O https://download.tbytm.com/stars/releases/shell/nas-shell-uninstall.sh && sudo sh nas-shell-uninstall.sh")
+	commands, err := conn.SendCommands("curl -O https://download.tbytm.com/stars/releases/shell/nas-shell-uninstall.sh && sudo setsid sh nas-shell-uninstall.sh")
 	if err != nil {
 		return false
 	}
@@ -26,7 +26,7 @@ func (conn *Connection) UnInstallStars() bool {
 
 func (conn *Connection) IsRunStars() bool {
 	// 判断文件是否存在/opt/stars/stars
-	commands, err := conn.SendCommands("ps aux | grep -v grep | grep \"stars\"")
+	commands, err := conn.SendCommands("ps aux | grep -v grep | grep -w \"stars\"")
 	if err != nil {
 		return false
 	}

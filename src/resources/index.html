@@ -3,11 +3,29 @@
     <head>
         <meta charset="utf-8">
         <meta name="viewport" content="width=device-width, initial-scale=1">
-        <title>Bootstrap demo</title>
-        <link rel="stylesheet" href="/css/bootstrap.min.css">
+        <title>星空-个人云安装器</title>
+        <link rel="stylesheet" href="css/bootstrap.min.css">
     </head>
     <body>
         <div class="container">
+            <nav class="navbar navbar-expand-lg bg-body-tertiary">
+                <div class="container-fluid">
+                    <a class="navbar-brand" href="#"><img src="images/logo.svg" alt="Logo" width="30" height="24" class="d-inline-block align-text-top">星空-私有云</a>
+                    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+                        <span class="navbar-toggler-icon"></span>
+                    </button>
+                    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+                        <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+                            <li class="nav-item">
+                                <a class="nav-link" target="_blank" aria-current="page" href="https://ip4.ink/">官网</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link" target="_blank" href="https://ip4.ink/help/">文档</a>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            </nav>
             <div class="mb-3">
                 <label for="ssh-port" class="form-label">群辉账号：</label>
                 <input type="text" class="form-control" id="ssh-username" placeholder="输入群辉账号">
@@ -22,20 +40,23 @@
             </div>
             <div class="mb-3">
                 <div class="d-grid gap-2">
-                    <button class="btn btn-primary" type="button" onclick="install()">安装 星空</button>
-                    <button class="btn btn-primary" type="button" onclick="unInstall()">卸载 星空</button>
                     <button class="btn btn-primary" type="button" onclick="checkStatus()">查看状态 星空</button>
+                    <button class="btn btn-primary" type="button" onclick="install()">安装 星空</button>
+                    <button class="btn btn-danger" type="button" onclick="unInstall()">卸载 星空</button>
                 </div>
             </div>
         </div>
 
     </body>
-    <script src="/js/jquery-3.7.0.min.js"></script>
+    <script src="js/bootstrap.js"></script>
+    <script src="js/jquery-3.7.0.min.js"></script>
+    <script src="js/layer/layer.js"></script>
     <script>
         function checkStatus() {
-            var sshUsername = $('#ssh-username').val();
-            var sshPassword = $('#ssh-password').val();
-            var sshPort = $('#ssh-port').val();
+            const sshUsername = $('#ssh-username').val();
+            const sshPassword = $('#ssh-password').val();
+            const sshPort = $('#ssh-port').val();
+            const index = layer.load(1);
             $.post(
                 "/open/v1/status",
                 {
@@ -44,41 +65,78 @@
                     ssh_port: sshPort,
                 },
                 function (data) {
-                    console.log(data);
+                    layer.close(index)
+                    if (data.code === 0){
+                        layer.msg(data.message, {icon: 1})
+                    }else {
+                        layer.msg(data.message, {icon: 2})
+                    }
                 }
             )
         }
         function install() {
-            var sshUsername = $('#ssh-username').val();
-            var sshPassword = $('#ssh-password').val();
-            var sshPort = $('#ssh-port').val();
-            $.post(
-                "/open/v1/install",
-                {
-                    ssh_username: sshUsername,
-                    ssh_password: sshPassword,
-                    ssh_port: sshPort,
-                },
-                function (data) {
-                    console.log(data);
-                }
-            )
+            const sshUsername = $('#ssh-username').val();
+            const sshPassword = $('#ssh-password').val();
+            const sshPort = $('#ssh-port').val();
+            layer.confirm('确定要安装/更新吗？', {
+                btn: ['确定','取消'] //按钮
+            }, function(){
+                const index = layer.load(1);
+                $.post(
+                    "/open/v1/install",
+                    {
+                        ssh_username: sshUsername,
+                        ssh_password: sshPassword,
+                        ssh_port: sshPort,
+                    },
+                    function (data) {
+                        layer.close(index)
+                        if (data.code === 0){
+                            layer.alert(data.message, {
+                                icon: 1,
+                                end: function(){
+                                    // 获取当前地址
+                                    var url = window.location.protocol + "//" + window.location.hostname + ":7725";
+                                    // 打开新的 URL
+                                    window.open(url, '_blank');
+                                }
+                            });
+                        }else {
+                            layer.msg(data.message, {icon: 2})
+                        }
+                    }
+                )
+            }, function(){
+                layer.msg("已取消", {icon: 1})
+            });
         }
         function unInstall() {
-            var sshUsername = $('#ssh-username').val();
-            var sshPassword = $('#ssh-password').val();
-            var sshPort = $('#ssh-port').val();
-            $.post(
-                "/open/v1/uninstall",
-                {
-                    ssh_username: sshUsername,
-                    ssh_password: sshPassword,
-                    ssh_port: sshPort,
-                },
-                function (data) {
-                    console.log(data);
-                }
-            )
+            const sshUsername = $('#ssh-username').val();
+            const sshPassword = $('#ssh-password').val();
+            const sshPort = $('#ssh-port').val();
+            layer.confirm('确定要卸载吗？', {
+                btn: ['确定','取消'] //按钮
+            }, function(){
+                const index = layer.load(1);
+                $.post(
+                    "/open/v1/uninstall",
+                    {
+                        ssh_username: sshUsername,
+                        ssh_password: sshPassword,
+                        ssh_port: sshPort,
+                    },
+                    function (data) {
+                        layer.close(index)
+                        if (data.code === 0){
+                            layer.msg(data.message, {icon: 1})
+                        }else {
+                            layer.msg(data.message, {icon: 2})
+                        }
+                    }
+                )
+            }, function(){
+                layer.msg("已取消", {icon: 1})
+            });
         }
     </script>
 </html>

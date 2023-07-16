@@ -2,48 +2,71 @@ package action
 
 import (
 	"encoding/json"
+	"errors"
 	"gitee.com/Myzhang/stars.synology/src/sshx"
-	"github.com/ld-2022/jsonx"
 	"net/http"
+	"strings"
 )
 
-func Status(writer http.ResponseWriter, request *http.Request) {
-	result := jsonx.NewJSONObject()
+var defHost = "192.168.100.107"
+
+func GetConnect(request *http.Request) (conn *sshx.Connection, err error) {
 	sshUsername := request.FormValue("ssh_username")
 	sshPassword := request.FormValue("ssh_password")
 	sshPort := request.FormValue("ssh_port")
 	if sshPort == "" {
 		sshPort = "22"
 	}
-	connectNew, err := sshx.GetConnectNew(sshUsername, sshPassword, "127.0.0.1", sshPort, []string{})
+	connect, err := sshx.GetConnectNew(sshUsername, sshPassword, defHost, sshPort, []string{})
 	if err != nil {
-		result.Put("status", err.Error())
+		errStr := err.Error()
+		if strings.Contains(errStr, "ssh: unable to authenticate") {
+			errStr = "用户名或密码错误"
+		} else if strings.Contains(errStr, "connect: connection refused") {
+			errStr = "检查：控制面板->终端机和SNMP->终端机->启用SSH功能或端口号是否正确"
+		}
+		return nil, errors.New(errStr)
+	}
+	return connect, err
+}
+
+func Status(writer http.ResponseWriter, request *http.Request) {
+	result := new(R)
+	connectNew, err := GetConnect(request)
+	if err != nil {
+		result.Code = 500
+		result.Message = err.Error()
 	} else {
+		defer connectNew.Close()
 		if connectNew.IsInstallStars() {
-			result.Put("status", "已安装")
+			result.Code = 0
+			if connectNew.IsRunStars() {
+				result.Message = "运行中"
+			} else {
+				result.Message = "未运行"
+			}
 		} else {
-			result.Put("status", "没有安装")
+			result.Code = 500
+			result.Message = "未安装"
 		}
 	}
 	writeJSON(writer, result)
 }
 
 func Install(writer http.ResponseWriter, request *http.Request) {
-	result := jsonx.NewJSONObject()
-	sshUsername := request.FormValue("ssh_username")
-	sshPassword := request.FormValue("ssh_password")
-	sshPort := request.FormValue("ssh_port")
-	if sshPort == "" {
-		sshPort = "22"
-	}
-	connectNew, err := sshx.GetConnectNew(sshUsername, sshPassword, "127.0.0.1", sshPort, []string{})
+	result := new(R)
+	connectNew, err := GetConnect(request)
 	if err != nil {
-		result.Put("status", err.Error())
+		result.Code = 500
+		result.Message = err.Error()
 	} else {
+		defer connectNew.Close()
 		if connectNew.InstallStars() {
-			result.Put("status", "安装成功")
+			result.Code = 0
+			result.Message = "安装成功"
 		} else {
-			result.Put("status", "安装失败")
+			result.Code = 500
+			result.Message = "安装失败"
 		}
 	}
 	writeJSON(writer, result)
@@ -51,21 +74,19 @@ func Install(writer http.ResponseWriter, request *http.Request) {
 
 // 卸载
 func Uninstall(writer http.ResponseWriter, request *http.Request) {
-	result := jsonx.NewJSONObject()
-	sshUsername := request.FormValue("ssh_username")
-	sshPassword := request.FormValue("ssh_password")
-	sshPort := request.FormValue("ssh_port")
-	if sshPort == "" {
-		sshPort = "22"
-	}
-	connectNew, err := sshx.GetConnectNew(sshUsername, sshPassword, "127.0.0.1", sshPort, []string{})
+	result := new(R)
+	connectNew, err := GetConnect(request)
 	if err != nil {
-		result.Put("status", err.Error())
+		result.Code = 500
+		result.Message = err.Error()
 	} else {
+		defer connectNew.Close()
 		if connectNew.UnInstallStars() {
-			result.Put("status", "卸载成功")
+			result.Code = 0
+			result.Message = "卸载成功"
 		} else {
-			result.Put("status", "卸载失败")
+			result.Code = 500
+			result.Message = "卸载失败"
 		}
 	}
 	writeJSON(writer, result)

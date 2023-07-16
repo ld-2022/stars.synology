@@ -16,6 +16,9 @@ type Connection struct {
 }
 
 func GetConnectNew(user, password, host string, port string, cipherList []string) (conn *Connection, err error) {
+	if user == "" || password == "" {
+		return nil, fmt.Errorf("用户名或密码不能为空")
+	}
 	var (
 		auth         []ssh.AuthMethod
 		addr         string
