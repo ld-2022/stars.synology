@@ -31,7 +31,7 @@ create_spk(){
 
 	cp -av scripts $PKG_DIR/scripts
 	cp -av PACKAGE_ICON*.PNG $PKG_DIR
-	cp -av WIZARD_UIFILES $PKG_DIR
+#	cp -av WIZARD_UIFILES $PKG_DIR
 	cp -av conf $PKG_DIR
 	cp -av ui $PKG_DIR
 	cp -av LICENSE $PKG_DIR
