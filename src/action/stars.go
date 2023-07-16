@@ -8,7 +8,7 @@ import (
 	"strings"
 )
 
-var defHost = "192.168.100.107"
+var defHost = "127.0.0.1"
 
 func GetConnect(request *http.Request) (conn *sshx.Connection, err error) {
 	sshUsername := request.FormValue("ssh_username")
